@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-frcrs = { path = "../frcrs/" }
+frcrs = { git = "https://github.com/Team-2502/frcrs", branch = "jni" }
 tokio = { version = "1.38.0", features = ["full", "rt"] }
