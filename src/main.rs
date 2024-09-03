@@ -17,7 +17,7 @@ fn main() {
 
         observe_user_program_starting();
 
-        configure().await;
+        configure(&local).await;
     });
 
     executor.block_on(controller);
