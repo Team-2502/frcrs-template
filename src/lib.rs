@@ -2,16 +2,19 @@ pub mod subsystems;
 pub mod constants;
 
 use std::cell::RefCell;
+use std::marker::PhantomData;
+use std::ptr::NonNull;
 use std::rc::Rc;
 use frcrs::container;
 use frcrs::input::Joystick;
 use tokio::task::LocalSet;
 use crate::subsystems::{Drivetrain, Shooter};
 use frcrs::sleep_hz;
+use frcrs::Subsystem;
 
 pub struct Ferris {
-    drivetrain: Rc<RefCell<Drivetrain>>,
-    shooter: Rc<RefCell<Shooter>>
+    drivetrain: Subsystem<Drivetrain>,
+    shooter: Subsystem<Shooter>
 }
 
 pub struct Controllers {
@@ -22,8 +25,8 @@ pub struct Controllers {
 
 pub async fn configure(executor: &LocalSet) {
     let ferris = Ferris {
-        drivetrain: Rc::new(RefCell::new(Drivetrain::new())),
-        shooter: Rc::new(RefCell::new(Shooter::new())),
+        drivetrain: Subsystem::new(Drivetrain::new()),
+        shooter: Subsystem::new(Shooter::new()),
     };
 
     let mut controllers = Controllers {
@@ -36,11 +39,11 @@ pub async fn configure(executor: &LocalSet) {
 }
 
 pub async fn container<'a>(executor: &'a LocalSet, ferris: &Ferris, controllers: &mut Controllers) {
-    if let Ok(mut drivetrain) = ferris.drivetrain.try_borrow_mut() {
+    ferris.drivetrain.with_borrow_mut(|drivetrain| {
         drivetrain.drive(controllers.left_drive.get_y(), controllers.right_drive.get_y());
-    }
+    });
 
-    if let Ok(shooter) = ferris.shooter.clone().try_borrow_mut() {
+    ferris.shooter.with_borrow_mut(|shooter| {
         if controllers.operator.get(2) {
             shooter.set_shooter(1. - (controllers.operator.get_throttle() + 1.) / 2.);
         } else {
@@ -54,15 +57,13 @@ pub async fn container<'a>(executor: &'a LocalSet, ferris: &Ferris, controllers:
         } else {
             shooter.set_angle(0.);
         }
-    }
+    });
 
     if controllers.operator.get(1) {
-        let shooter = ferris.shooter.clone();
-
         executor.spawn_local(async move {
-            if let Ok(shooter) = shooter.try_borrow() {
+            ferris.shooter.clone().with_borrow_mut_async(|shooter| async {
                 shooter.shoot().await;
-            }
+            }).await; // Might break?
         });
     }
 }
