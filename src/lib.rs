@@ -136,8 +136,8 @@ pub enum Auto {
 impl Auto {
     pub fn from_dashboard(s: &str) -> Self {
         match s {
-            "Zero" => Auto::Zero,
-            "One" => Auto::One,
+            "0" => Auto::Zero,
+            "1" => Auto::One,
             _ => Auto::Zero,
         }
     }
