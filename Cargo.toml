@@ -1,3 +1,6 @@
+[workspace]
+members = ["talon-board/testing-server"]
+
 [package]
 name = "robotcode"
 version = "0.1.0"
@@ -6,6 +9,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-#frcrs = { git = "https://github.com/Team-2502/frcrs", branch = "master" }
 frcrs = { path = "../../frcrs" }
 tokio = { version = "1.38.0", features = ["full", "rt"] }
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0.128"
