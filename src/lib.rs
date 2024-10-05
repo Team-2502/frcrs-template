@@ -1,13 +1,7 @@
 pub mod subsystems;
 pub mod constants;
 
-use std::cell::RefCell;
-use std::marker::PhantomData;
-use std::mem;
-use std::ptr::NonNull;
-use std::rc::Rc;
 use std::time::Duration;
-use frcrs::container;
 use frcrs::input::Joystick;
 use tokio::task::LocalSet;
 use crate::subsystems::{Drivetrain, Shooter};
@@ -45,13 +39,8 @@ pub async fn configure(executor: &LocalSet) {
 
     let telemetry = Telemetry::new(5807);
 
-    telemetry.add_number("test", 4).await;
-    println!("test: {}", telemetry.get("test").await.unwrap());
-
     telemetry.add_string("auto chooser", serde_json::to_string(&Auto::names()).unwrap()).await;
     telemetry.add_number("selected auto", 0).await;
-
-    println!("selected: {}", telemetry.get("selected auto").await.unwrap());
 
     let mut auto_handle = None;
 
@@ -67,7 +56,7 @@ pub async fn configure(executor: &LocalSet) {
             if auto_handle.is_none() {
                 let f = ferris.clone();
 
-                if let Some(selected_auto) = telemetry.get("selected_auto").await {
+                if let Some(selected_auto) = telemetry.get("selected auto").await {
                     let chosen = Auto::from_dashboard(selected_auto.as_str());
 
                     let auto_task = run_auto(f, chosen);
