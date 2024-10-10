@@ -1,5 +1,6 @@
 pub mod subsystems;
 pub mod constants;
+mod auto;
 
 use std::time::Duration;
 use frcrs::input::Joystick;
@@ -11,7 +12,7 @@ use frcrs::telemetry::Telemetry;
 use tokio::time::sleep;
 use frcrs::refresh_data;
 use frcrs::input::RobotState;
-use serde::{Deserialize, Serialize};
+use crate::auto::Auto;
 
 #[derive(Clone)]
 pub struct Ferris {
@@ -59,7 +60,7 @@ pub async fn configure(executor: &LocalSet) {
                 if let Some(selected_auto) = telemetry.get("selected auto").await {
                     let chosen = Auto::from_dashboard(selected_auto.as_str());
 
-                    let auto_task = run_auto(f, chosen);
+                    let auto_task = Auto::run_auto(f, chosen);
                     let handle = executor.spawn_local(auto_task).abort_handle();
                     auto_handle = Some(handle);
                 } else {
@@ -113,56 +114,6 @@ pub async fn container<'a>(
                 shooter.shoot().await;
             }
         });
-    }
-}
-
-#[derive(Serialize, Deserialize)]
-pub enum Auto {
-    Zero,
-    One,
-}
-
-impl Auto {
-    pub fn from_dashboard(s: &str) -> Self {
-        match s {
-            "0" => Auto::Zero,
-            "1" => Auto::One,
-            _ => Auto::Zero,
-        }
-    }
-
-    pub fn name(&self) -> &'static str {
-        match self {
-            Auto::Zero => "Zero",
-            Auto::One => "One",
-            _ => "none",
-        }
-    }
-
-    pub fn iterator() -> Vec<Self> {
-        vec![
-            Auto::Zero,
-            Auto::One
-        ]
-    }
-
-    pub fn names() -> Vec<String> {
-        Self::iterator().iter().map(|a| a.name().to_owned()).collect()
-    }
-}
-
-pub async fn run_auto<'a>(ferris: Ferris, chosen: Auto) {
-    match chosen {
-        Auto::Zero => async {
-            println!("Running auto 0");
-            sleep(Duration::from_secs_f64(1.)).await;
-            println!("Finished auto 0");
-        }.await,
-        Auto::One => async {
-            println!("Running auto 1");
-            sleep(Duration::from_secs_f64(1.)).await;
-            println!("Finished auto 1");
-        }.await,
     }
 }
 
