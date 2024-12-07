@@ -47,6 +47,10 @@ impl Auto {
 
 async fn auto_zero() {
     println!("Running auto 0");
+    
+    drive("BottomWaitMid.2", &mut drivetrain),
+    timeout(Duration::from_millis(3000), stage(&mut intake, &shooter))
+    
     sleep(Duration::from_secs_f64(1.)).await;
     println!("Finished auto 0");
 }
