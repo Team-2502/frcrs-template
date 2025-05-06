@@ -1,1 +1,1 @@
-cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/64008962/rust/talon/frcrs-template/target/debug/build/mime_guess-c714eccf466196f7/out/mime_types_generated.rs
+cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/64009865/Desktop/code/frcrs-template/target/debug/build/mime_guess-c714eccf466196f7/out/mime_types_generated.rs

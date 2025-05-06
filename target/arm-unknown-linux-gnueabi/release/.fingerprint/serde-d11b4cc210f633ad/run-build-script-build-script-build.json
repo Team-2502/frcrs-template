@@ -1,0 +1,1 @@
+{"rustc":5357548097637079788,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[9689903380558560274,"build_script_build",false,5977859051381604328]],"local":[{"RerunIfChanged":{"output":"arm-unknown-linux-gnueabi/release/build/serde-d11b4cc210f633ad/output","paths":["build.rs"]}}],"rustflags":["-C","target-cpu=cortex-a9"],"config":0,"compile_kind":0}

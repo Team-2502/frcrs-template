@@ -28,7 +28,7 @@ impl Joysticks {
 }
 
 pub fn teleop(ferris: &mut Ferris, sticks: &mut Joysticks) {
-    // println!("{}", sticks.stick.get_x());
+    println!("{}", sticks.stick.get_x());
     ferris.motor.set(sticks.stick.get_x());
-    ferris.motor.set(sticks.stick.get_y());
+    // ferris.motor.set(sticks.stick.get_y());
 }

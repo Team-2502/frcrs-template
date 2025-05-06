@@ -14,7 +14,7 @@ impl Default for Motor {
 impl Motor {
     pub fn new() -> Self {
         Self {
-            motor: Talon::new(robotmap::my_motor::MOTOR_ID, None),
+            motor: Talon::new(robotmap::my_motor::MOTOR_ID, Some("can0".to_string())),
         }
     }
 
